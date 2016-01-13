@@ -4,14 +4,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+// import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 public class Circles {
 
   static int[] Circles(int distance, int[] radius, int[] cost) {
-    int maxRadius = Integer.MIN_VALUE;
-    int[] retList = new int[radius.length];
-    HashMap<Integer, ArrayList<Pair>> map = new HashMap<>();
+    long maxRadius = Integer.MIN_VALUE;
+    long[] retCostList = new long[radius.length];
+    long[] retIndexList = new long[radius.length];
+    TreeMap<Integer, ArrayList<Pair>> map = new TreeMap<>();
     for (int i = 0; i < radius.length; i++) {
       if (maxRadius < radius[i]) {
         maxRadius = radius[i];
@@ -32,7 +35,8 @@ public class Circles {
         map.put(radius[i], li);
       }
     }
-    for (Entry<Integer, ArrayList<Pair>> entry : map.entrySet()) {
+    // Iterator it = map.entrySet().iterator();
+    for (java.util.Map.Entry<Integer, ArrayList<Pair>> entry : map.entrySet()) {
       ArrayList<Pair> pair = entry.getValue();
       Collections.sort(pair, new Comparator<Pair>() {
 
@@ -52,26 +56,84 @@ public class Circles {
         }
       });
     }
+    ArrayList<RadiusPair> radiusPair = new ArrayList<>();
 
-    int current = 0, previous = maxRadius;
-    for (int i = 0; i < radius.length; i++) {
-      if (radius[i] + maxRadius < distance) {
-        retList[i] = 0;
-        previous = i;
+    for (java.util.Map.Entry<Integer, ArrayList<Pair>> entry : map.entrySet()) {
+      RadiusPair obj = new RadiusPair();
+      obj.radius = entry.getKey();
+      obj.indexCostList = entry.getValue();
+      radiusPair.add(obj);
+    }
+
+    // int current = 0, previous = maxRadius;
+    HashMap<Integer, Integer> radiusCostMap = new HashMap<Integer, Integer>();
+    int last = radiusPair.size() - 1;
+    long RadList[] = new long[radius.length];
+    for (int i = 0; i < radiusPair.size(); i++) {
+      long currentRadius = radiusPair.get(i).radius;
+      if (distance > currentRadius + maxRadius) {
+        retCostList[i] = Integer.MAX_VALUE;
+        radiusCostMap.put((int)currentRadius, (int)0);
       } else {
-        if (map.containsKey(radius[i]) == false) {
-          retList[i] = 0;
+        long tempMinCost = Integer.MAX_VALUE;
+        long tempMinIndex = -1;
+        for (int j = last; j > -1 && distance <= currentRadius + radiusPair.get(j).radius; j--, last--) {
+          if (tempMinCost > radiusPair.get(j).indexCostList.get(0).cost) {
+            tempMinCost = radiusPair.get(j).indexCostList.get(0).cost;
+            tempMinIndex = radiusPair.get(j).indexCostList.get(0).index;
+          }
         }
-
+        if (i - 1 > -1 && retCostList[i - 1] < tempMinCost) {
+          tempMinCost = retCostList[i - 1];
+          tempMinIndex = retIndexList[i - 1];
+        }
+        retCostList[i] = tempMinCost;
+        retIndexList[i] = tempMinIndex;
+        RadList[i] = currentRadius;
+        radiusCostMap.put((int) currentRadius, (int) tempMinIndex +1);
       }
     }
 
-    return retList;
+    int finalRetList[] = new int[radius.length];
+    for (int i = 0; i < radius.length; i++) {
+      int currentRadius = radius[i];/*
+                                     * for (int j = 0; j < RadList.length; j++) { if (currentRadius
+                                     * == RadList[j]) { finalRetList[i] = (int) retIndexList[j] + 1;
+                                     * break; } }
+                                     */
+      finalRetList[i] = (int) radiusCostMap.get(currentRadius);
+    }
+
+    return finalRetList;
   }
 
   static class Pair {
-    int index;
-    int cost;
+    long index;
+    long cost;
+  }
+
+  static class RadiusPair {
+    ArrayList<Pair> indexCostList;
+    long radius;
+  }
+
+  public static void main(String[] args) {
+    int distance = 8;
+    int[] radius = {1, 3, 6, 2, 5};
+    int[] cost = {5, 6, 8, 3, 4};
+
+
+    // int distance = 1;
+    // int[] radius = {4/* , 4, 4, 4, 5, 4, 5 */};
+    // int[] cost = {5/* , 4, 3, 2, 2, 2, 2 */};
+    display(Circles(distance, radius, cost));
+  }
+
+  private static void display(int[] circles) {
+    for (int i = 0; i < circles.length; i++) {
+      System.out.println(circles[i]);
+    }
+
   }
 
 }
