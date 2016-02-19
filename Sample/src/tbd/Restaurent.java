@@ -1,6 +1,9 @@
 package tbd;
 
-public class Restaurent {
+
+
+
+public class Restaurent extends  AbstractClass implements IInterface{
 
   protected Restaurent() {
     System.out.println("inside Restaurent Constructor");
@@ -13,6 +16,11 @@ public class Restaurent {
       sInstance = new Restaurent();
     }
     return sInstance;
+  }
+
+  @Override
+  public void method1() {
+    
   }
 
 
