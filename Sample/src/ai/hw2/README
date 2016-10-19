@@ -1,0 +1,19 @@
+SearchUSA.java takes command line input and the information about graph comes from citiesHeuristic and citiesDistances files which should be in the same folder.
+
+In citiesDistances, every line represents a edge in the graph.
+In citiesHeuristic, every line represents the latitude and longitude of a city.
+
+
+To compile the SearchUSA.java
+javac SearchUSA.java
+
+To run the program, SearchUSA the format is (same as what is described in instructions):
+java SearchUSA searchtype srccityname destcityname 
+
+For Example:
+java SearchUSA greedy japan desMoines
+
+java SearchUSA astar japan desMoines
+
+java SearchUSA uniform japan desMoines
+
