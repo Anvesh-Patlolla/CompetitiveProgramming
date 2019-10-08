@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.commons.lang.ArrayUtils;
+//import org.apache.commons.lang.ArrayUtils;
 //TODO: incomplete. Logic is easy.
 public class Palindrome_Pairs_336 {
 	public List<List<Integer>> palindromePairs(String[] words) {
@@ -21,7 +21,7 @@ public class Palindrome_Pairs_336 {
 	}
 
 	private boolean equals(String string, String string2) {
-		char[] concat = ArrayUtils.addAll(string.toCharArray(), string2.toCharArray());
+		char[] concat = null ;//ArrayUtils.addAll(string.toCharArray(), string2.toCharArray());
 		for (int i = 0, j = concat.length - 1; i < concat.length; i++, j--) {
 			if (concat[i] != concat[j]) {
 				return false;
